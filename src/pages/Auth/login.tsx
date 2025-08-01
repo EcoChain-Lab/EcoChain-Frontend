@@ -169,6 +169,18 @@ export default function LoginPage() {
             </form>
           </Card>
 
+          <div className="text-center mt-6 sm:mt-8">
+            <p className="font-bold text-sm sm:text-base">
+              BACK TO{" "}
+              <a
+                href="/"
+                className="text-green-600 hover:text-green-800 font-black underline decoration-2 hover:decoration-4 transition-all duration-200"
+              >
+                HOME
+              </a>
+            </p>
+          </div>
+
           {/* Sign Up Link */}
           <div className="text-center mt-6 sm:mt-8">
             <p className="font-bold text-sm sm:text-base">
