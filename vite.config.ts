@@ -26,9 +26,9 @@ export default defineConfig({
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
       },
       manifest: {
-        name: "React-vite-app-pwa",
-        short_name: "ReactPWA",
-        description: "I am a simple vite app",
+        name: "EcoChain",
+        short_name: "EcoChain",
+        description: "EcoChain: Recycle Smart. Earn Smarter.",
         start_url: "/",
         display: "standalone",
         background_color: "#ffffff",
@@ -36,13 +36,13 @@ export default defineConfig({
         orientation: "portrait-primary",
         icons: [
           {
-            src: "/PWA/icons-1.png",
+            src: "/PWA/logo.png",
             type: "image/png",
             sizes: "192x192",
             purpose: "any",
           },
           {
-            src: "/PWA/icons-2.png",
+            src: "/PWA/logo.png",
             type: "image/png",
             sizes: "512x512",
             purpose: "any",
@@ -50,13 +50,13 @@ export default defineConfig({
         ],
         screenshots: [
           {
-            src: "/PWA/bg-2.png",
+            src: "/PWA/logo.png",
             sizes: "1280x720",
             type: "image/png",
             form_factor: "wide",
           },
           {
-            src: "/PWA/bg-1.png",
+            src: "/PWA/logo.png",
             sizes: "375x667",
             type: "image/png",
           },
