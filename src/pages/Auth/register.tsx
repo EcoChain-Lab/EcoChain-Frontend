@@ -1,28 +1,43 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
-import { Leaf, Eye, EyeOff, Mail, Lock, User, ArrowRight, Globe, Users, Award } from "lucide-react"
-import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import {
+  Leaf,
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  ArrowRight,
+  Globe,
+  Users,
+  Award,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { auth } from "../firebase";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useNavigate } from "react-router";
 
 export default function RegisterPage() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
-  })
-  const [isLoading, setIsLoading] = useState(false)
-  const [passwordStrength, setPasswordStrength] = useState(0)
-  const [floatingElements, setFloatingElements] = useState<Array<{ id: number; x: number; y: number; delay: number }>>(
-    [],
-  )
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [floatingElements, setFloatingElements] = useState<
+    Array<{ id: number; x: number; y: number; delay: number }>
+  >([]);
+  const navigate = useNavigate();
 
   // Generate floating elements for animation
   useEffect(() => {
@@ -31,64 +46,76 @@ export default function RegisterPage() {
       x: Math.random() * 100,
       y: Math.random() * 100,
       delay: Math.random() * 3,
-    }))
-    setFloatingElements(elements)
-  }, [])
+    }));
+    setFloatingElements(elements);
+  }, []);
 
   // Calculate password strength
   useEffect(() => {
-    const password = formData.password
-    let strength = 0
-    if (password.length >= 8) strength++
-    if (/[A-Z]/.test(password)) strength++
-    if (/[0-9]/.test(password)) strength++
-    if (/[^A-Za-z0-9]/.test(password)) strength++
-    setPasswordStrength(strength)
-  }, [formData.password])
+    const password = formData.password;
+    let strength = 0;
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    setPasswordStrength(strength);
+  }, [formData.password]);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsLoading(false)
-  }
-
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      await updateProfile(userCredential.user, {
+        displayName: `${formData.firstName} ${formData.lastName}`,
+      });
+      alert("Account created!");
+      navigate("/login");
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const getPasswordStrengthColor = () => {
     switch (passwordStrength) {
       case 0:
       case 1:
-        return "bg-red-500"
+        return "bg-red-500";
       case 2:
-        return "bg-yellow-500"
+        return "bg-yellow-500";
       case 3:
-        return "bg-green-400"
+        return "bg-green-400";
       case 4:
-        return "bg-green-600"
+        return "bg-green-600";
       default:
-        return "bg-gray-300"
+        return "bg-gray-300";
     }
-  }
+  };
 
   const getPasswordStrengthText = () => {
     switch (passwordStrength) {
       case 0:
       case 1:
-        return "WEAK"
+        return "WEAK";
       case 2:
-        return "FAIR"
+        return "FAIR";
       case 3:
-        return "GOOD"
+        return "GOOD";
       case 4:
-        return "STRONG"
+        return "STRONG";
       default:
-        return ""
+        return "";
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col lg:flex-row">
@@ -118,8 +145,12 @@ export default function RegisterPage() {
                     <stat.icon className="h-5 sm:h-6 w-5 sm:w-6" />
                   </div>
                   <div className="text-left">
-                    <div className="font-black text-base sm:text-lg">{stat.value}</div>
-                    <div className="font-bold text-xs sm:text-sm opacity-90">{stat.label}</div>
+                    <div className="font-black text-base sm:text-lg">
+                      {stat.value}
+                    </div>
+                    <div className="font-bold text-xs sm:text-sm opacity-90">
+                      {stat.label}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -157,7 +188,9 @@ export default function RegisterPage() {
             <div className="bg-green-400 p-2 sm:p-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <Leaf className="h-6 sm:h-8 w-6 sm:w-8 text-black" />
             </div>
-            <div className="text-2xl sm:text-3xl font-black uppercase">ECOCHAIN</div>
+            <div className="text-2xl sm:text-3xl font-black uppercase">
+              ECOCHAIN
+            </div>
           </div>
 
           {/* Welcome Text */}
@@ -178,13 +211,17 @@ export default function RegisterPage() {
               {/* Name Fields */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="space-y-2">
-                  <label className="block font-black uppercase text-xs sm:text-sm">FIRST NAME</label>
+                  <label className="block font-black uppercase text-xs sm:text-sm">
+                    FIRST NAME
+                  </label>
                   <div className="relative">
                     <User className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-500" />
                     <Input
                       type="text"
                       value={formData.firstName}
-                      onChange={(e) => handleInputChange("firstName", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("firstName", e.target.value)
+                      }
                       placeholder="JOHN"
                       className="pl-10 sm:pl-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                       required
@@ -192,11 +229,15 @@ export default function RegisterPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="block font-black uppercase text-xs sm:text-sm">LAST NAME</label>
+                  <label className="block font-black uppercase text-xs sm:text-sm">
+                    LAST NAME
+                  </label>
                   <Input
                     type="text"
                     value={formData.lastName}
-                    onChange={(e) => handleInputChange("lastName", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("lastName", e.target.value)
+                    }
                     placeholder="DOE"
                     className="border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
@@ -206,7 +247,9 @@ export default function RegisterPage() {
 
               {/* Email Field */}
               <div className="space-y-2">
-                <label className="block font-black uppercase text-xs sm:text-sm">EMAIL ADDRESS</label>
+                <label className="block font-black uppercase text-xs sm:text-sm">
+                  EMAIL ADDRESS
+                </label>
                 <div className="relative">
                   <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-500" />
                   <Input
@@ -222,13 +265,17 @@ export default function RegisterPage() {
 
               {/* Password Field */}
               <div className="space-y-2">
-                <label className="block font-black uppercase text-xs sm:text-sm">PASSWORD</label>
+                <label className="block font-black uppercase text-xs sm:text-sm">
+                  PASSWORD
+                </label>
                 <div className="relative">
                   <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-500" />
                   <Input
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     placeholder="CREATE PASSWORD"
                     className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
@@ -253,14 +300,22 @@ export default function RegisterPage() {
                         <div
                           key={level}
                           className={`h-2 flex-1 border-2 border-black ${
-                            level <= passwordStrength ? getPasswordStrengthColor() : "bg-gray-200"
+                            level <= passwordStrength
+                              ? getPasswordStrengthColor()
+                              : "bg-gray-200"
                           } transition-colors duration-300`}
                         ></div>
                       ))}
                     </div>
                     <p className="text-xs font-bold">
                       PASSWORD STRENGTH:{" "}
-                      <span className={passwordStrength >= 3 ? "text-green-600" : "text-red-500"}>
+                      <span
+                        className={
+                          passwordStrength >= 3
+                            ? "text-green-600"
+                            : "text-red-500"
+                        }
+                      >
                         {getPasswordStrengthText()}
                       </span>
                     </p>
@@ -270,13 +325,17 @@ export default function RegisterPage() {
 
               {/* Confirm Password Field */}
               <div className="space-y-2">
-                <label className="block font-black uppercase text-xs sm:text-sm">CONFIRM PASSWORD</label>
+                <label className="block font-black uppercase text-xs sm:text-sm">
+                  CONFIRM PASSWORD
+                </label>
                 <div className="relative">
                   <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-500" />
                   <Input
                     type={showConfirmPassword ? "text" : "password"}
                     value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("confirmPassword", e.target.value)
+                    }
                     placeholder="CONFIRM PASSWORD"
                     className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
@@ -293,9 +352,12 @@ export default function RegisterPage() {
                     )}
                   </button>
                 </div>
-                {formData.confirmPassword && formData.password !== formData.confirmPassword && (
-                  <p className="text-xs font-bold text-red-500">PASSWORDS DO NOT MATCH</p>
-                )}
+                {formData.confirmPassword &&
+                  formData.password !== formData.confirmPassword && (
+                    <p className="text-xs font-bold text-red-500">
+                      PASSWORDS DO NOT MATCH
+                    </p>
+                  )}
               </div>
 
               {/* Terms & Conditions */}
@@ -307,11 +369,17 @@ export default function RegisterPage() {
                 />
                 <p className="font-bold text-xs sm:text-sm">
                   I AGREE TO THE{" "}
-                  <a href="/terms" className="text-green-600 hover:text-green-800 underline decoration-2">
+                  <a
+                    href="/terms"
+                    className="text-green-600 hover:text-green-800 underline decoration-2"
+                  >
                     TERMS & CONDITIONS
                   </a>{" "}
                   AND{" "}
-                  <a href="/privacy" className="text-green-600 hover:text-green-800 underline decoration-2">
+                  <a
+                    href="/privacy"
+                    className="text-green-600 hover:text-green-800 underline decoration-2"
+                  >
                     PRIVACY POLICY
                   </a>
                 </p>
@@ -320,7 +388,9 @@ export default function RegisterPage() {
               {/* Register Button */}
               <Button
                 type="submit"
-                disabled={isLoading || formData.password !== formData.confirmPassword}
+                disabled={
+                  isLoading || formData.password !== formData.confirmPassword
+                }
                 className="w-full bg-green-600 text-white border-4 border-black hover:bg-black font-black uppercase text-base sm:text-lg py-4 sm:py-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-300 group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
@@ -353,5 +423,5 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

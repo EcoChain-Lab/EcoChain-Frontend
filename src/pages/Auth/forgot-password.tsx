@@ -1,21 +1,33 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
-import { Leaf, Mail, ArrowRight, ArrowLeft, CheckCircle, Shield, Clock, Smartphone } from "lucide-react"
-import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import {
+  Leaf,
+  Mail,
+  ArrowRight,
+  ArrowLeft,
+  CheckCircle,
+  Shield,
+  Clock,
+  Smartphone,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebase";
+
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [isEmailSent, setIsEmailSent] = useState(false)
-  const [countdown, setCountdown] = useState(0)
-  const [floatingElements, setFloatingElements] = useState<Array<{ id: number; x: number; y: number; delay: number }>>(
-    [],
-  )
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [floatingElements, setFloatingElements] = useState<
+    Array<{ id: number; x: number; y: number; delay: number }>
+  >([]);
 
   // Generate floating elements for animation
   useEffect(() => {
@@ -24,35 +36,44 @@ export default function ForgotPasswordPage() {
       x: Math.random() * 100,
       y: Math.random() * 100,
       delay: Math.random() * 2,
-    }))
-    setFloatingElements(elements)
-  }, [])
+    }));
+    setFloatingElements(elements);
+  }, []);
 
   // Countdown timer for resend
   useEffect(() => {
     if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
     }
-  }, [countdown])
+  }, [countdown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsLoading(false)
-    setIsEmailSent(true)
-    setCountdown(60) // 60 seconds countdown
-  }
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setIsEmailSent(true);
+      setCountdown(60);
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleResend = async () => {
-    setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    setIsLoading(false)
-    setCountdown(60)
-  }
+    if (countdown > 0) return;
+    setIsLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setCountdown(60);
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col lg:flex-row">
@@ -64,7 +85,9 @@ export default function ForgotPasswordPage() {
             <div className="bg-green-400 p-2 sm:p-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <Leaf className="h-6 sm:h-8 w-6 sm:w-8 text-black" />
             </div>
-            <div className="text-2xl sm:text-3xl font-black uppercase">ECOCHAIN</div>
+            <div className="text-2xl sm:text-3xl font-black uppercase">
+              ECOCHAIN
+            </div>
           </div>
 
           {/* Back to Login */}
@@ -92,10 +115,15 @@ export default function ForgotPasswordPage() {
 
               {/* Reset Form */}
               <Card className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 sm:p-8 bg-white">
-                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-4 sm:space-y-6"
+                >
                   {/* Email Field */}
                   <div className="space-y-2">
-                    <label className="block font-black uppercase text-sm">EMAIL ADDRESS</label>
+                    <label className="block font-black uppercase text-sm">
+                      EMAIL ADDRESS
+                    </label>
                     <div className="relative">
                       <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-500" />
                       <Input
@@ -145,37 +173,49 @@ export default function ForgotPasswordPage() {
                 <p className="text-base sm:text-lg font-bold text-gray-600 mb-3 sm:mb-4">
                   WE'VE SENT A PASSWORD RESET LINK TO:
                 </p>
-                <p className="text-lg sm:text-xl font-black text-green-600 mb-4 sm:mb-6 break-all">{email}</p>
+                <p className="text-lg sm:text-xl font-black text-green-600 mb-4 sm:mb-6 break-all">
+                  {email}
+                </p>
               </div>
 
               {/* Instructions Card */}
               <Card className="border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6 sm:p-8 bg-white mb-4 sm:mb-6">
-                <h3 className="text-lg sm:text-xl font-black uppercase mb-3 sm:mb-4">NEXT STEPS:</h3>
+                <h3 className="text-lg sm:text-xl font-black uppercase mb-3 sm:mb-4">
+                  NEXT STEPS:
+                </h3>
                 <div className="space-y-3 sm:space-y-4">
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="bg-green-400 border-2 border-black p-2 text-black font-black text-sm min-w-[2rem] text-center">
                       1
                     </div>
-                    <p className="font-bold text-sm sm:text-base">CHECK YOUR EMAIL INBOX (AND SPAM FOLDER)</p>
+                    <p className="font-bold text-sm sm:text-base">
+                      CHECK YOUR EMAIL INBOX (AND SPAM FOLDER)
+                    </p>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="bg-green-400 border-2 border-black p-2 text-black font-black text-sm min-w-[2rem] text-center">
                       2
                     </div>
-                    <p className="font-bold text-sm sm:text-base">CLICK THE RESET LINK IN THE EMAIL</p>
+                    <p className="font-bold text-sm sm:text-base">
+                      CLICK THE RESET LINK IN THE EMAIL
+                    </p>
                   </div>
                   <div className="flex items-start gap-3 sm:gap-4">
                     <div className="bg-green-400 border-2 border-black p-2 text-black font-black text-sm min-w-[2rem] text-center">
                       3
                     </div>
-                    <p className="font-bold text-sm sm:text-base">CREATE YOUR NEW PASSWORD</p>
+                    <p className="font-bold text-sm sm:text-base">
+                      CREATE YOUR NEW PASSWORD
+                    </p>
                   </div>
                 </div>
               </Card>
 
               {/* Resend Button */}
               <div className="text-center">
-                <p className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">DIDN'T RECEIVE THE EMAIL?</p>
+                <p className="font-bold mb-3 sm:mb-4 text-sm sm:text-base">
+                  DIDN'T RECEIVE THE EMAIL?
+                </p>
                 <Button
                   onClick={handleResend}
                   disabled={countdown > 0 || isLoading}
@@ -222,12 +262,26 @@ export default function ForgotPasswordPage() {
               <br />
               <span className="text-green-200">RECOVERY</span>
             </h2>
-            <p className="text-lg sm:text-xl font-bold mb-6 sm:mb-8">YOUR ACCOUNT SECURITY IS OUR TOP PRIORITY</p>
+            <p className="text-lg sm:text-xl font-bold mb-6 sm:mb-8">
+              YOUR ACCOUNT SECURITY IS OUR TOP PRIORITY
+            </p>
             <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {[
-                { icon: Shield, label: "ENCRYPTED LINKS", desc: "SECURE RESET PROCESS" },
-                { icon: Clock, label: "QUICK RECOVERY", desc: "RESET IN MINUTES" },
-                { icon: Smartphone, label: "MOBILE FRIENDLY", desc: "WORKS ON ALL DEVICES" },
+                {
+                  icon: Shield,
+                  label: "ENCRYPTED LINKS",
+                  desc: "SECURE RESET PROCESS",
+                },
+                {
+                  icon: Clock,
+                  label: "QUICK RECOVERY",
+                  desc: "RESET IN MINUTES",
+                },
+                {
+                  icon: Smartphone,
+                  label: "MOBILE FRIENDLY",
+                  desc: "WORKS ON ALL DEVICES",
+                },
               ].map((feature, index) => (
                 <div
                   key={index}
@@ -237,8 +291,12 @@ export default function ForgotPasswordPage() {
                     <feature.icon className="h-5 sm:h-6 w-5 sm:w-6" />
                   </div>
                   <div className="text-left">
-                    <div className="font-black text-base sm:text-lg">{feature.label}</div>
-                    <div className="font-bold text-xs sm:text-sm opacity-90">{feature.desc}</div>
+                    <div className="font-black text-base sm:text-lg">
+                      {feature.label}
+                    </div>
+                    <div className="font-bold text-xs sm:text-sm opacity-90">
+                      {feature.desc}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -252,7 +310,6 @@ export default function ForgotPasswordPage() {
         <div className="absolute top-1/2 right-1/4 w-12 sm:w-16 h-12 sm:h-16 bg-white/30 border-4 border-white rounded-full animate-ping"></div>
         <div className="absolute bottom-1/3 right-1/3 w-14 sm:w-20 h-14 sm:h-20 bg-white/20 border-4 border-white transform rotate-45 animate-pulse"></div>
       </div>
-
     </div>
-  )
+  );
 }

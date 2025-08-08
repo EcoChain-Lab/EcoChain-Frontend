@@ -1,20 +1,38 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card } from "@/components/ui/card"
-import { Leaf, Eye, EyeOff, Mail, Lock, ArrowRight, Coins, Recycle, Shield } from "lucide-react"
-import { useState, useEffect } from "react"
+import type React from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import {
+  Leaf,
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  ArrowRight,
+  Coins,
+  Recycle,
+  Shield,
+} from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router";
 
 export default function LoginPage() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [floatingElements, setFloatingElements] = useState<Array<{ id: number; x: number; y: number; delay: number }>>(
-    [],
-  )
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [floatingElements, setFloatingElements] = useState<
+    Array<{ id: number; x: number; y: number; delay: number }>
+  >([]);
+  const navigate = useNavigate();
 
   // Generate floating elements for animation
   useEffect(() => {
@@ -23,17 +41,34 @@ export default function LoginPage() {
       x: Math.random() * 100,
       y: Math.random() * 100,
       delay: Math.random() * 2,
-    }))
-    setFloatingElements(elements)
-  }, [])
+    }));
+    setFloatingElements(elements);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsLoading(false)
-  }
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      alert("Login success!");
+      navigate("/home");
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      alert("Google login success!");
+      navigate("/home");
+    } catch (error: any) {
+      alert(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col lg:flex-row">
@@ -45,7 +80,9 @@ export default function LoginPage() {
             <div className="bg-green-400 p-2 sm:p-3 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
               <Leaf className="h-6 sm:h-8 w-6 sm:w-8 text-black" />
             </div>
-            <div className="text-2xl sm:text-3xl font-black uppercase">ECOCHAIN</div>
+            <div className="text-2xl sm:text-3xl font-black uppercase">
+              ECOCHAIN
+            </div>
           </div>
 
           {/* Welcome Text */}
@@ -65,7 +102,9 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {/* Email Field */}
               <div className="space-y-2">
-                <label className="block font-black uppercase text-sm">EMAIL ADDRESS</label>
+                <label className="block font-black uppercase text-sm">
+                  EMAIL ADDRESS
+                </label>
                 <div className="relative">
                   <Mail className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-500" />
                   <Input
@@ -81,7 +120,9 @@ export default function LoginPage() {
 
               {/* Password Field */}
               <div className="space-y-2">
-                <label className="block font-black uppercase text-sm">PASSWORD</label>
+                <label className="block font-black uppercase text-sm">
+                  PASSWORD
+                </label>
                 <div className="relative">
                   <Lock className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 sm:h-5 w-4 sm:w-5 text-gray-500" />
                   <Input
@@ -109,7 +150,10 @@ export default function LoginPage() {
               {/* Remember Me & Forgot Password */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 border-2 border-black accent-green-600" />
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 border-2 border-black accent-green-600"
+                  />
                   <span className="font-bold text-sm">REMEMBER ME</span>
                 </label>
                 <a
@@ -145,7 +189,9 @@ export default function LoginPage() {
                   <div className="w-full border-t-4 border-black"></div>
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-white px-4 font-black uppercase text-sm">OR</span>
+                  <span className="bg-white px-4 font-black uppercase text-sm">
+                    OR
+                  </span>
                 </div>
               </div>
 
@@ -155,6 +201,7 @@ export default function LoginPage() {
                   type="button"
                   variant="outline"
                   className="border-4 border-black bg-white hover:bg-green-50 font-black uppercase text-xs sm:text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all duration-300"
+                  onClick={handleGoogleLogin}
                 >
                   🔍 GOOGLE
                 </Button>
@@ -206,9 +253,15 @@ export default function LoginPage() {
               animationDelay: `${element.delay}s`,
             }}
           >
-            {element.id % 3 === 0 && <Leaf className="h-6 sm:h-8 w-6 sm:w-8 text-green-600" />}
-            {element.id % 3 === 1 && <Coins className="h-6 sm:h-8 w-6 sm:w-8 text-green-600" />}
-            {element.id % 3 === 2 && <Recycle className="h-6 sm:h-8 w-6 sm:w-8 text-green-600" />}
+            {element.id % 3 === 0 && (
+              <Leaf className="h-6 sm:h-8 w-6 sm:w-8 text-green-600" />
+            )}
+            {element.id % 3 === 1 && (
+              <Coins className="h-6 sm:h-8 w-6 sm:w-8 text-green-600" />
+            )}
+            {element.id % 3 === 2 && (
+              <Recycle className="h-6 sm:h-8 w-6 sm:w-8 text-green-600" />
+            )}
           </div>
         ))}
       </div>
@@ -235,8 +288,12 @@ export default function LoginPage() {
                   <div className="bg-white/30 border-2 border-white p-3 sm:p-4 mb-2 inline-block">
                     <stat.icon className="h-6 sm:h-8 w-6 sm:w-8" />
                   </div>
-                  <div className="font-black text-base sm:text-lg">{stat.value}</div>
-                  <div className="font-bold text-xs sm:text-sm opacity-90">{stat.label}</div>
+                  <div className="font-black text-base sm:text-lg">
+                    {stat.value}
+                  </div>
+                  <div className="font-bold text-xs sm:text-sm opacity-90">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
@@ -249,7 +306,6 @@ export default function LoginPage() {
         <div className="absolute top-1/2 left-12 sm:left-20 w-12 sm:w-16 h-12 sm:h-16 bg-white/30 border-4 border-white rounded-full animate-ping"></div>
         <div className="absolute bottom-1/3 left-1/3 w-14 sm:w-20 h-14 sm:h-20 bg-white/20 border-4 border-white transform rotate-45 animate-pulse"></div>
       </div>
-      
     </div>
-  )
+  );
 }
