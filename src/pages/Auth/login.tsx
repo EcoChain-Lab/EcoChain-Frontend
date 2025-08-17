@@ -115,7 +115,7 @@ export default function LoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="YOUR@EMAIL.COM"
-                    className="pl-10 sm:pl-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
+                    className="pl-10 sm:pl-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -133,7 +133,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="YOUR PASSWORD"
-                    className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
+                    className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold  placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
                   />
                   <button
@@ -199,7 +199,7 @@ export default function LoginPage() {
               </div>
 
               {/* Social Login */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 gap-3 sm:gap-4">
                 <Button
                   type="button"
                   variant="outline"
@@ -207,13 +207,6 @@ export default function LoginPage() {
                   onClick={handleGoogleLogin}
                 >
                   🔍 GOOGLE
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="border-4 border-black bg-white hover:bg-green-50 font-black uppercase text-xs sm:text-sm shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all duration-300"
-                >
-                  📱 APPLE
                 </Button>
               </div>
             </form>

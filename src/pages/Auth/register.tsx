@@ -226,7 +226,7 @@ export default function RegisterPage() {
                         handleInputChange("firstName", e.target.value)
                       }
                       placeholder="JOHN"
-                      className="pl-10 sm:pl-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
+                      className="pl-10 sm:pl-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                       required
                     />
                   </div>
@@ -242,7 +242,7 @@ export default function RegisterPage() {
                       handleInputChange("lastName", e.target.value)
                     }
                     placeholder="DOE"
-                    className="border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
+                    className="border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                     value={formData.email}
                     onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="YOUR@EMAIL.COM"
-                    className="pl-10 sm:pl-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
+                    className="pl-10 sm:pl-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
                   />
                 </div>
@@ -280,7 +280,7 @@ export default function RegisterPage() {
                       handleInputChange("password", e.target.value)
                     }
                     placeholder="CREATE PASSWORD"
-                    className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
+                    className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold  placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
                   />
                   <button
@@ -340,7 +340,7 @@ export default function RegisterPage() {
                       handleInputChange("confirmPassword", e.target.value)
                     }
                     placeholder="CONFIRM PASSWORD"
-                    className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
+                    className="pl-10 sm:pl-12 pr-10 sm:pr-12 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold  placeholder:text-gray-400 focus:border-green-600 transition-colors duration-300 text-sm sm:text-base"
                     required
                   />
                   <button
