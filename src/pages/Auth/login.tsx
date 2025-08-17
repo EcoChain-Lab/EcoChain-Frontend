@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import type React from "react";
@@ -23,6 +24,8 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router";
+
+import {toast} from "sonner"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -50,10 +53,10 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      alert("Login success!");
+      toast.success("Login success!");
       navigate("/home");
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }

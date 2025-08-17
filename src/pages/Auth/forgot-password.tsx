@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import type React from "react";
@@ -19,6 +20,7 @@ import { useState, useEffect } from "react";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../firebase";
 
+import {toast} from "sonner"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -55,8 +57,9 @@ export default function ForgotPasswordPage() {
       await sendPasswordResetEmail(auth, email);
       setIsEmailSent(true);
       setCountdown(60);
+      toast.success("Reset Password Email Sent!")
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }

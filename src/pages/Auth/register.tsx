@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import type React from "react";
@@ -21,6 +22,8 @@ import { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router";
+
+import {toast} from "sonner"
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -77,10 +80,10 @@ export default function RegisterPage() {
       await updateProfile(userCredential.user, {
         displayName: `${formData.firstName} ${formData.lastName}`,
       });
-      alert("Account created!");
+      toast.success("Account created!");
       navigate("/login");
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
