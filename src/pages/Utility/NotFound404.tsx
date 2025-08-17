@@ -4,6 +4,7 @@ import { Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function NotFoundPage() {
+
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -13,7 +14,7 @@ export default function NotFoundPage() {
   if (!mounted) return null
 
   return (
-    <div className="container flex flex-col items-center justify-center min-h-[calc(100vh-200px)] px-4 text-center">
+    <div className="container flex flex-col items-center justify-center min-h-[calc(100vh)] px-4 text-center">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -63,7 +64,7 @@ export default function NotFoundPage() {
         >
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-4">Page Not Found</h1>
           <p className="text-muted-foreground mb-8">
-            Oops! The page you're looking for seems to have wandered off into the digital wilderness.
+            No Way... Page you search not Found. Please return to the home page.
           </p>
         </motion.div>
 
@@ -73,13 +74,15 @@ export default function NotFoundPage() {
           transition={{ delay: 0.9, duration: 0.5 }}
           className="relative"
         >
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-500 to-violet-500 rounded-full opacity-75 blur-sm animate-pulse" />
+
+
           <a href="/" className="relative block">
             <Button size="lg" className="rounded-full">
               <Home className="mr-2 h-4 w-4" />
-              Back to Home
+              Back to Home Page
             </Button>
           </a>
+
         </motion.div>
       </motion.div>
 
